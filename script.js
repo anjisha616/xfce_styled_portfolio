@@ -157,13 +157,6 @@ function initMenu() {
         });
     });
     
-    // Theme toggle
-    document.getElementById('themeToggle').addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
-        mainMenu.classList.remove('active');
-        menuBtn.classList.remove('active');
-    });
-    
     // Download resume
     document.getElementById('downloadResume').addEventListener('click', () => {
         alert('Add your resume download link here!');
@@ -291,12 +284,6 @@ function getWindowContent(app) {
             <h3>UI/UX Designer & Frontend Developer</h3>
             <p>📍 Butwal, Nepal</p>
             <p>UI/UX designer and frontend developer specializing in crafting intuitive, visually compelling digital experiences. Proficient in HTML, CSS, and JavaScript, with growing expertise in React and Next.js. Combines design thinking with technical implementation, backed by knowledge in Django and Python for full-stack perspective.</p>
-            <h3>Connect</h3>
-            <p>
-                <a href="https://github.com/anjisha616" target="_blank">GitHub</a> • 
-                <a href="https://www.linkedin.com/in/anjisha-pun-aaa1a6349/" target="_blank">LinkedIn</a> • 
-                <a href="mailto:punangisha@gmail.com">Email</a>
-            </p>
         `,
         
         skills: `

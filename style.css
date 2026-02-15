@@ -11,25 +11,17 @@
     --accent: #87CEEB;
     --accent-hover: #6BB6D9;
     
-    --window-bg: #f5f5f5;
-    --window-titlebar: #e0e0e0;
-    --window-border: #cccccc;
+    --window-bg: #2d2d2d;
+    --window-titlebar: #1a1a1a;
+    --window-border: #444444;
     
     --text-light: #ffffff;
-    --text-dark: #2d2d2d;
-    --text-muted: #888888;
+    --text-dark: #f5f5f5;
+    --text-muted: #aaaaaa;
     
     --success: #7cb342;
     --warning: #ffa726;
     --danger: #ef5350;
-}
-
-body.dark-theme {
-    --window-bg: #2d2d2d;
-    --window-titlebar: #1a1a1a;
-    --window-border: #444444;
-    --text-dark: #f5f5f5;
-    --text-muted: #aaaaaa;
 }
 
 * {
@@ -39,7 +31,7 @@ body.dark-theme {
 }
 
 body {
-    font-family: 'Ubuntu', 'Segoe UI', sans-serif;
+    font-family: 'Poppins', 'Ubuntu', 'Segoe UI', sans-serif;
     overflow: hidden;
     height: 100vh;
     background: var(--bg-primary);
