@@ -317,6 +317,7 @@ body {
     inset: 0;
     bottom: 48px;
     pointer-events: none;
+    z-index: 50;
 }
 
 .window {
