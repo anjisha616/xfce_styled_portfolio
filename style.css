@@ -531,53 +531,35 @@ body {
     text-decoration: underline;
 }
 
-/* Skills - No Percentages */
+/* Skills */
 .skills-grid {
     display: grid;
-    gap: 25px;
-}
-
-.skill-category {
-    background: rgba(135, 206, 235, 0.08);
-    padding: 20px;
-    border-radius: 10px;
-    border-left: 4px solid var(--accent);
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
 }
 
 .skill-category h4 {
-    color: var(--accent);
-    margin-bottom: 15px;
-    font-size: 1.1rem;
-    font-weight: 500;
-}
-
-.skill-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 12px;
-}
-
-.skill-name {
-    min-width: 130px;
-    font-weight: 500;
     color: var(--text-dark);
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.skill-bar {
-    flex: 1;
-    height: 24px;
-    background: rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
-.skill-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent-hover));
-    border-radius: 12px;
-    transition: width 1s ease;
+.skill-tag {
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
 }
 
 /* Projects Grid */

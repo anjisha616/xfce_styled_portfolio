@@ -304,62 +304,35 @@ function getWindowContent(app) {
             <h2>Skills & Expertise</h2>
             <div class="skills-grid">
                 <div class="skill-category">
-                    <h4>🎨 Design Tools</h4>
-                    <div class="skill-item">
-                        <span class="skill-name">Figma</span>
-                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 85%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">Canva</span>
-                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 75%"></div></div>
+                    <h4>Design</h4>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Figma</span>
+                        <span class="skill-tag">Canva</span>
                     </div>
                 </div>
-                
                 <div class="skill-category">
-                    <h4>💻 Frontend</h4>
-                    <div class="skill-item">
-                        <span class="skill-name">HTML/CSS</span>
-                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 90%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">JavaScript</span>
-                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 80%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">React (learning)</span>
-                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 55%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">Next.js (learning)</span>
-                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 45%"></div></div>
+                    <h4>Frontend</h4>
+                    <div class="skill-tags">
+                        <span class="skill-tag">HTML</span>
+                        <span class="skill-tag">CSS</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Next.js</span>
                     </div>
                 </div>
-                
                 <div class="skill-category">
-                    <h4>🔧 Backend</h4>
-                    <div class="skill-item">
-                        <span class="skill-name">Django</span>
-                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 60%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">Python</span>
-                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 60%"></div></div>
+                    <h4>Backend</h4>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Django</span>
                     </div>
                 </div>
-                
                 <div class="skill-category">
-                    <h4>🌟 Non-Technical</h4>
-                    <div class="skill-item">
-                        <span class="skill-name">Communication</span>
-                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 85%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">Presentation</span>
-                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 85%"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <span class="skill-name">Music</span>
-                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 70%"></div></div>
+                    <h4>Other</h4>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Git</span>
+                        <span class="skill-tag">Communication</span>
+                        <span class="skill-tag">Presentation</span>
                     </div>
                 </div>
             </div>
