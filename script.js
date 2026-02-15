@@ -18,9 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initWidgets();
     initMenu();
     initPanel();
-    
-    // Auto-open about window
-    setTimeout(() => openWindow('about'), 2500);
 });
 
 // ==================== BOOT SEQUENCE ====================
