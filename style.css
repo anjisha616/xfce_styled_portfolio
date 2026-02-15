@@ -532,34 +532,46 @@ body {
 }
 
 /* Skills */
-.skills-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+.skills-section {
+    max-width: 700px;
+}
+
+.skills-list {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
 }
 
 .skill-category h4 {
-    color: var(--text-dark);
-    margin-bottom: 12px;
-    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
 }
 
 .skill-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
 }
 
 .skill-tag {
-    padding: 6px 14px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    font-size: 0.85rem;
-    color: var(--text-muted);
+    padding: 8px 18px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--text-dark);
+    transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(135, 206, 235, 0.08);
 }
 
 /* Projects Grid */

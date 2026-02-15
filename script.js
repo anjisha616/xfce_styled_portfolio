@@ -301,38 +301,40 @@ function getWindowContent(app) {
         `,
         
         skills: `
-            <h2>Skills & Expertise</h2>
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <h4>Design</h4>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Figma</span>
-                        <span class="skill-tag">Canva</span>
+            <div class="skills-section">
+                <h2>Technical Skills</h2>
+                <hr class="about-divider">
+                <div class="skills-list">
+                    <div class="skill-category">
+                        <h4>Frontend</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">HTML/CSS</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Next.js</span>
+                        </div>
                     </div>
-                </div>
-                <div class="skill-category">
-                    <h4>Frontend</h4>
-                    <div class="skill-tags">
-                        <span class="skill-tag">HTML</span>
-                        <span class="skill-tag">CSS</span>
-                        <span class="skill-tag">JavaScript</span>
-                        <span class="skill-tag">React</span>
-                        <span class="skill-tag">Next.js</span>
+                    <div class="skill-category">
+                        <h4>Backend</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">Django</span>
+                        </div>
                     </div>
-                </div>
-                <div class="skill-category">
-                    <h4>Backend</h4>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Python</span>
-                        <span class="skill-tag">Django</span>
+                    <div class="skill-category">
+                        <h4>Design</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Figma</span>
+                            <span class="skill-tag">Canva</span>
+                        </div>
                     </div>
-                </div>
-                <div class="skill-category">
-                    <h4>Other</h4>
-                    <div class="skill-tags">
-                        <span class="skill-tag">Git</span>
-                        <span class="skill-tag">Communication</span>
-                        <span class="skill-tag">Presentation</span>
+                    <div class="skill-category">
+                        <h4>Beyond the Code</h4>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Communication</span>
+                            <span class="skill-tag">Presentation</span>
+                            <span class="skill-tag">Git</span>
+                        </div>
                     </div>
                 </div>
             </div>
