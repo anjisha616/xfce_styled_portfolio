@@ -403,6 +403,7 @@ function initWindowControls(win, winState) {
     win.querySelector('.maximize').addEventListener('click', () => {
         winState.maximized = !winState.maximized;
         win.classList.toggle('maximized');
+        updateWidgetsVisibility();
     });
     
     win.querySelector('.close').addEventListener('click', () => {
@@ -411,10 +412,17 @@ function initWindowControls(win, winState) {
             win.remove();
             state.windows = state.windows.filter(w => w !== winState);
             updateWindowButtons();
+            updateWidgetsVisibility();
         }, 200);
     });
     
     win.addEventListener('mousedown', () => focusWindow(win));
+}
+
+function updateWidgetsVisibility() {
+    const widgets = document.querySelector('.desktop-widgets');
+    const anyMaximized = document.querySelector('.window.maximized') !== null;
+    widgets.style.display = anyMaximized ? 'none' : 'flex';
 }
 
 function focusWindow(win) {
