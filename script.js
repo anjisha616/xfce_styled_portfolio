@@ -360,17 +360,22 @@ function getWindowContent(app) {
         `,
         
         contact: `
-            <h2>Get In Touch</h2>
-            <p><strong>Email:</strong> <a href="mailto:punangisha@gmail.com">punangisha@gmail.com</a></p>
-            <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/anjisha-pun-aaa1a6349/" target="_blank">View Profile</a></p>
-            <p><strong>GitHub:</strong> <a href="https://github.com/anjisha616" target="_blank">@anjisha616</a></p>
-            <h3>Send Message</h3>
-            <form id="contactForm" style="display: grid; gap: 15px; max-width: 500px;">
-                <input type="text" placeholder="Your Name" required style="padding: 10px; border-radius: 6px; border: 1px solid #ddd;">
-                <input type="email" placeholder="Your Email" required style="padding: 10px; border-radius: 6px; border: 1px solid #ddd;">
-                <textarea placeholder="Message" rows="5" required style="padding: 10px; border-radius: 6px; border: 1px solid #ddd;"></textarea>
-                <button type="submit" style="padding: 12px; background: #87CEEB; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Send</button>
-            </form>
+            <div class="contact-section">
+                <h2>Get In Touch</h2>
+                <hr class="about-divider">
+                <div class="contact-links">
+                    <p><strong>Email:</strong> <a href="mailto:punangisha@gmail.com">punangisha@gmail.com</a></p>
+                    <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/anjisha-pun-aaa1a6349/" target="_blank">View Profile</a></p>
+                    <p><strong>GitHub:</strong> <a href="https://github.com/anjisha616" target="_blank">@anjisha616</a></p>
+                </div>
+                <h3>Send Message</h3>
+                <form id="contactForm" class="contact-form">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <textarea placeholder="Message" rows="5" required></textarea>
+                    <button type="submit">Send</button>
+                </form>
+            </div>
         `
     };
     
