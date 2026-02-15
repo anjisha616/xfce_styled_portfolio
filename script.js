@@ -280,10 +280,24 @@ function openWindow(appName) {
 function getWindowContent(app) {
     const content = {
         about: `
-            <h2>Anjisha Pun</h2>
-            <h3>UI/UX Designer & Frontend Developer</h3>
-            <p>📍 Butwal, Nepal</p>
-            <p>UI/UX designer and frontend developer specializing in crafting intuitive, visually compelling digital experiences. Proficient in HTML, CSS, and JavaScript, with growing expertise in React and Next.js. Combines design thinking with technical implementation, backed by knowledge in Django and Python for full-stack perspective.</p>
+            <div class="about-section">
+                <div class="about-header">
+                    <h2>Anjisha Pun</h2>
+                    <p class="about-role">UI/UX Designer & Frontend Developer</p>
+                    <p class="about-location">📍 Butwal, Nepal</p>
+                </div>
+                <hr class="about-divider">
+                <div class="about-bio">
+                    <p>UI/UX designer and frontend developer specializing in crafting intuitive, visually compelling digital experiences. Proficient in HTML, CSS, and JavaScript, with growing expertise in React and Next.js. Combines design thinking with technical implementation, backed by knowledge in Django and Python for full-stack perspective.</p>
+                </div>
+                <div class="about-status">
+                    <span class="status-dot"></span>
+                    <div class="status-text">
+                        <span class="status-label">STATUS</span>
+                        <span class="status-value">Open to opportunities</span>
+                    </div>
+                </div>
+            </div>
         `,
         
         skills: `
