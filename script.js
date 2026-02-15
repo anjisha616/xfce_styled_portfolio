@@ -1,289 +1,296 @@
-// ============================================
-// LINUX MINT PORTFOLIO - MAIN JAVASCRIPT
-// ============================================
+// Linux Mint Cinnamon Portfolio - Main Script
+// Anjisha Pun
 
 const GITHUB_USERNAME = 'anjisha616';
 const EXCLUDED_REPOS = ['cafe-clone', 'netflix-clone', 'starbucks-clone'];
 
-// State Management
 const state = {
     windows: [],
-    activeWindow: null,
     nextZIndex: 100,
-    windowPositions: {
-        about: { x: 100, y: 80 },
-        skills: { x: 150, y: 100 },
-        projects: { x: 200, y: 120 },
-        github: { x: 120, y: 90 },
-        contact: { x: 180, y: 110 },
-        experience: { x: 140, y: 95 }
-    }
+    activeWindow: null
 };
 
-// ============================================
-// INITIALIZATION
-// ============================================
+// ==================== INITIALIZATION ====================
 
 document.addEventListener('DOMContentLoaded', () => {
     initBootSequence();
     initClock();
+    initWidgets();
     initMenu();
-    initDesktopIcons();
-    initTaskbar();
-    initContextMenu();
-    initTheme();
-    initKonamiCode();
+    initPanel();
     
-    // Auto-open About window after boot
-    setTimeout(() => {
-        openWindow('about');
-    }, 3500);
+    // Auto-open about window
+    setTimeout(() => openWindow('about'), 2500);
 });
 
-// ============================================
-// BOOT SEQUENCE
-// ============================================
+// ==================== BOOT SEQUENCE ====================
 
 function initBootSequence() {
-    const bootScreen = document.getElementById('bootScreen');
-    
     setTimeout(() => {
-        bootScreen.style.display = 'none';
-    }, 3000);
+        document.getElementById('bootScreen').style.display = 'none';
+    }, 2000);
 }
 
-// ============================================
-// CLOCK
-// ============================================
+// ==================== CLOCK ====================
 
 function initClock() {
-    const clockElement = document.getElementById('clock');
+    const clockEl = document.getElementById('clock');
     
-    function updateClock() {
+    function update() {
         const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        clockElement.textContent = `${hours}:${minutes}`;
+        const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+        const date = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        
+        clockEl.querySelector('.clock-time').textContent = time;
+        clockEl.querySelector('.clock-date').textContent = date;
     }
     
-    updateClock();
-    setInterval(updateClock, 1000);
+    update();
+    setInterval(update, 1000);
 }
 
-// ============================================
-// MENU
-// ============================================
+// ==================== CPU & RAM WIDGETS ====================
+
+function initWidgets() {
+    // CPU Graph
+    const cpuCanvas = document.getElementById('cpuGraph');
+    const cpuCtx = cpuCanvas.getContext('2d');
+    const cpuData = new Array(80).fill(0);
+    
+    function drawCPUGraph() {
+        cpuCtx.clearRect(0, 0, cpuCanvas.width, cpuCanvas.height);
+        
+        // Draw grid
+        cpuCtx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        cpuCtx.lineWidth = 1;
+        for (let i = 0; i < 5; i++) {
+            const y = (cpuCanvas.height / 4) * i;
+            cpuCtx.beginPath();
+            cpuCtx.moveTo(0, y);
+            cpuCtx.lineTo(cpuCanvas.width, y);
+            cpuCtx.stroke();
+        }
+        
+        // Draw CPU line
+        cpuCtx.strokeStyle = '#87CEEB';
+        cpuCtx.lineWidth = 2;
+        cpuCtx.beginPath();
+        
+        cpuData.forEach((value, i) => {
+            const x = (i / cpuData.length) * cpuCanvas.width;
+            const y = cpuCanvas.height - (value / 100) * cpuCanvas.height;
+            
+            if (i === 0) {
+                cpuCtx.moveTo(x, y);
+            } else {
+                cpuCtx.lineTo(x, y);
+            }
+        });
+        
+        cpuCtx.stroke();
+        
+        // Fill area under curve
+        cpuCtx.lineTo(cpuCanvas.width, cpuCanvas.height);
+        cpuCtx.lineTo(0, cpuCanvas.height);
+        cpuCtx.closePath();
+        cpuCtx.fillStyle = 'rgba(135, 206, 235, 0.2)';
+        cpuCtx.fill();
+    }
+    
+    function updateCPU() {
+        // Simulate CPU usage
+        const newValue = Math.random() * 10 + 1; // 1-11%
+        cpuData.push(newValue);
+        cpuData.shift();
+        
+        document.getElementById('cpuPercent').textContent = Math.round(newValue) + '%';
+        drawCPUGraph();
+    }
+    
+    // RAM Usage
+    function updateRAM() {
+        const usage = 75 + Math.random() * 10; // 75-85%
+        const used = (usage / 100 * 7.4).toFixed(1);
+        
+        document.getElementById('ramPercent').textContent = Math.round(usage) + '%';
+        document.getElementById('ramBar').style.width = usage + '%';
+        document.getElementById('ramUsed').textContent = used;
+    }
+    
+    // Update intervals
+    setInterval(updateCPU, 1000);
+    setInterval(updateRAM, 2000);
+    drawCPUGraph();
+}
+
+// ==================== MAIN MENU ====================
 
 function initMenu() {
-    const menuButton = document.getElementById('menuButton');
-    const appMenu = document.getElementById('appMenu');
-    const menuItems = document.querySelectorAll('.menu-item[data-app]');
+    const menuBtn = document.getElementById('menuBtn');
+    const mainMenu = document.getElementById('mainMenu');
+    const menuApps = document.querySelectorAll('.menu-app[data-app]');
     
-    menuButton.addEventListener('click', (e) => {
+    menuBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        appMenu.classList.toggle('active');
+        mainMenu.classList.toggle('active');
+        menuBtn.classList.toggle('active');
     });
     
-    // Close menu when clicking outside
     document.addEventListener('click', () => {
-        appMenu.classList.remove('active');
+        mainMenu.classList.remove('active');
+        menuBtn.classList.remove('active');
     });
     
-    appMenu.addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
+    mainMenu.addEventListener('click', (e) => e.stopPropagation());
     
-    // Menu item clicks
-    menuItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const app = item.dataset.app;
-            openWindow(app);
-            appMenu.classList.remove('active');
+    menuApps.forEach(app => {
+        app.addEventListener('click', () => {
+            openWindow(app.dataset.app);
+            mainMenu.classList.remove('active');
+            menuBtn.classList.remove('active');
         });
     });
     
-    // Download Resume
-    document.getElementById('downloadResume').addEventListener('click', () => {
-        alert('Resume download feature - Add your resume link here!');
-        appMenu.classList.remove('active');
+    // Menu search
+    document.getElementById('menuSearch').addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        menuApps.forEach(app => {
+            const name = app.querySelector('.app-name').textContent.toLowerCase();
+            app.style.display = name.includes(query) ? 'flex' : 'none';
+        });
     });
     
-    // Theme Toggle
+    // Theme toggle
     document.getElementById('themeToggle').addEventListener('click', () => {
         document.body.classList.toggle('dark-theme');
-        appMenu.classList.remove('active');
+        mainMenu.classList.remove('active');
+        menuBtn.classList.remove('active');
+    });
+    
+    // Download resume
+    document.getElementById('downloadResume').addEventListener('click', () => {
+        alert('Add your resume download link here!');
     });
 }
 
-// ============================================
-// DESKTOP ICONS
-// ============================================
+// ==================== PANEL ====================
 
-function initDesktopIcons() {
-    const icons = document.querySelectorAll('.desktop-icon');
-    let selectedIcon = null;
-    let clickTimer = null;
+function initPanel() {
+    // Window buttons update happens in updateWindowButtons()
+}
+
+function updateWindowButtons() {
+    const container = document.getElementById('windowButtons');
+    container.innerHTML = '';
     
-    icons.forEach(icon => {
-        // Single click - select
-        icon.addEventListener('click', (e) => {
-            e.stopPropagation();
+    state.windows.forEach(win => {
+        if (!win.minimized) {
+            const btn = document.createElement('button');
+            btn.className = 'window-button';
+            btn.textContent = win.title;
             
-            // Clear previous selection
-            if (selectedIcon && selectedIcon !== icon) {
-                selectedIcon.classList.remove('selected');
+            if (win.element === state.activeWindow) {
+                btn.classList.add('active');
             }
             
-            icon.classList.add('selected');
-            selectedIcon = icon;
+            btn.addEventListener('click', () => {
+                focusWindow(win.element);
+            });
             
-            // Double click detection
-            if (clickTimer) {
-                clearTimeout(clickTimer);
-                clickTimer = null;
-                const app = icon.dataset.app;
-                openWindow(app);
-            } else {
-                clickTimer = setTimeout(() => {
-                    clickTimer = null;
-                }, 300);
-            }
-        });
-    });
-    
-    // Deselect when clicking desktop
-    document.getElementById('desktop').addEventListener('click', () => {
-        if (selectedIcon) {
-            selectedIcon.classList.remove('selected');
-            selectedIcon = null;
+            container.appendChild(btn);
         }
     });
 }
 
-// ============================================
-// WINDOW MANAGEMENT
-// ============================================
+// ==================== WINDOW MANAGEMENT ====================
 
 function openWindow(appName) {
-    // Check if window already exists
-    const existingWindow = state.windows.find(w => w.app === appName);
-    if (existingWindow) {
-        // Restore if minimized and focus
-        if (existingWindow.minimized) {
-            restoreWindow(existingWindow.element);
-        }
-        focusWindow(existingWindow.element);
+    // Check if already open
+    const existing = state.windows.find(w => w.app === appName);
+    if (existing) {
+        focusWindow(existing.element);
         return;
     }
     
-    // Create new window
     const template = document.getElementById('windowTemplate');
-    const windowElement = template.content.cloneNode(true).querySelector('.window');
+    const win = template.content.cloneNode(true).querySelector('.window');
     
-    // Set window properties
-    windowElement.dataset.app = appName;
+    // Set properties
+    win.dataset.app = appName;
     
-    // Set icon and title
     const iconMap = {
-        about: '📁',
-        experience: '💼',
+        about: '👤',
         skills: '⚙️',
-        projects: '🗂️',
+        projects: '📁',
         github: '📊',
-        contact: '📧',
-        resume: '📄'
+        contact: '✉️'
     };
     
     const titleMap = {
-        about: 'About_Me.txt',
-        experience: 'Experience.md',
+        about: 'About - Anjisha Pun',
         skills: 'System Monitor - Skills',
         projects: 'Files - Projects',
         github: 'Terminal - GitHub Stats',
-        contact: 'Thunderbird - Contact',
-        resume: 'Resume.pdf'
+        contact: 'Mail - Contact'
     };
     
-    windowElement.querySelector('.window-icon').textContent = iconMap[appName] || '📄';
-    windowElement.querySelector('.window-title').textContent = titleMap[appName] || appName;
+    win.querySelector('.window-icon').textContent = iconMap[appName] || '📄';
+    win.querySelector('.window-name').textContent = titleMap[appName] || appName;
     
     // Load content
-    const content = windowElement.querySelector('.window-content');
-    content.innerHTML = getWindowContent(appName);
+    win.querySelector('.window-body').innerHTML = getWindowContent(appName);
     
-    // Position window
-    const pos = state.windowPositions[appName] || { x: 100, y: 80 };
-    windowElement.style.left = pos.x + 'px';
-    windowElement.style.top = pos.y + 'px';
-    windowElement.style.zIndex = state.nextZIndex++;
+    // Position
+    const positions = {
+        about: { x: 100, y: 80 },
+        skills: { x: 150, y: 100 },
+        projects: { x: 200, y: 120 },
+        github: { x: 120, y: 90 },
+        contact: { x: 180, y: 110 }
+    };
     
-    // Add to container
-    document.getElementById('windowsContainer').appendChild(windowElement);
+    const pos = positions[appName] || { x: 150, y: 100 };
+    win.style.left = pos.x + 'px';
+    win.style.top = pos.y + 'px';
+    win.style.zIndex = state.nextZIndex++;
     
-    // Store window state
-    const windowState = {
+    // Add to DOM
+    document.getElementById('windowsContainer').appendChild(win);
+    
+    // Store state
+    const winState = {
         app: appName,
-        element: windowElement,
+        title: titleMap[appName],
+        element: win,
         minimized: false,
         maximized: false
     };
-    state.windows.push(windowState);
+    state.windows.push(winState);
     
-    // Initialize window controls
-    initWindowControls(windowElement, windowState);
+    // Init controls
+    initWindowControls(win, winState);
+    makeDraggable(win);
+    focusWindow(win);
+    updateWindowButtons();
     
-    // Make window draggable
-    makeWindowDraggable(windowElement);
-    
-    // Focus window
-    focusWindow(windowElement);
-    
-    // Add to taskbar
-    updateWindowList();
-    
-    // Load dynamic content if needed
-    if (appName === 'projects') {
-        loadProjects();
-    } else if (appName === 'github') {
-        loadGitHubStats();
-    }
+    // Load dynamic content
+    if (appName === 'projects') loadProjects();
+    if (appName === 'github') loadGitHub();
 }
 
-function getWindowContent(appName) {
+function getWindowContent(app) {
     const content = {
         about: `
             <h2>Anjisha Pun</h2>
             <h3>UI/UX Designer & Frontend Developer</h3>
-            <p><strong>Location:</strong> 📍 Butwal, Nepal</p>
-            
-            <h3>About</h3>
+            <p>📍 Butwal, Nepal</p>
             <p>UI/UX designer and frontend developer specializing in crafting intuitive, visually compelling digital experiences. Proficient in HTML, CSS, and JavaScript, with growing expertise in React and Next.js. Combines design thinking with technical implementation, backed by knowledge in Django and Python for full-stack perspective.</p>
-            
-            <h3>Links</h3>
+            <h3>Connect</h3>
             <p>
-                🔗 <a href="https://github.com/anjisha616" target="_blank">GitHub: anjisha616</a><br>
-                🔗 <a href="https://www.linkedin.com/in/anjisha-pun-aaa1a6349/" target="_blank">LinkedIn Profile</a><br>
-                📧 <a href="mailto:punangisha@gmail.com">punangisha@gmail.com</a>
+                <a href="https://github.com/anjisha616" target="_blank">GitHub</a> • 
+                <a href="https://www.linkedin.com/in/anjisha-pun-aaa1a6349/" target="_blank">LinkedIn</a> • 
+                <a href="mailto:punangisha@gmail.com">Email</a>
             </p>
-        `,
-        
-        experience: `
-            <h2>Experience</h2>
-            
-            <div style="background: rgba(143, 168, 118, 0.1); padding: 20px; border-radius: 8px; border-left: 4px solid var(--mint-primary);">
-                <h3>🚧 Currently Seeking Opportunities</h3>
-                <p>Building portfolio and honing skills in UI/UX design and frontend development.</p>
-                <p>Ready to bring creative solutions and technical expertise to your team!</p>
-            </div>
-            
-            <h3>Education</h3>
-            <p><strong>Focus Areas:</strong></p>
-            <ul>
-                <li>UI/UX Design Principles</li>
-                <li>Frontend Web Development</li>
-                <li>Design Systems & Component Libraries</li>
-                <li>Responsive Web Design</li>
-            </ul>
         `,
         
         skills: `
@@ -293,15 +300,11 @@ function getWindowContent(appName) {
                     <h4>🎨 Design Tools</h4>
                     <div class="skill-item">
                         <span class="skill-name">Figma</span>
-                        <div class="skill-bar">
-                            <div class="skill-bar-fill" style="width: 85%">85%</div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 85%"></div></div>
                     </div>
                     <div class="skill-item">
                         <span class="skill-name">Canva</span>
-                        <div class="skill-bar">
-                            <div class="skill-bar-fill" style="width: 75%">75%</div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 75%"></div></div>
                     </div>
                 </div>
                 
@@ -309,27 +312,19 @@ function getWindowContent(appName) {
                     <h4>💻 Frontend</h4>
                     <div class="skill-item">
                         <span class="skill-name">HTML/CSS</span>
-                        <div class="skill-bar">
-                            <div class="skill-bar-fill" style="width: 90%">90%</div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 90%"></div></div>
                     </div>
                     <div class="skill-item">
                         <span class="skill-name">JavaScript</span>
-                        <div class="skill-bar">
-                            <div class="skill-bar-fill" style="width: 80%">80%</div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 80%"></div></div>
                     </div>
                     <div class="skill-item">
-                        <span class="skill-name">React</span>
-                        <div class="skill-bar">
-                            <div class="skill-bar-fill" style="width: 55%">55% (learning)</div>
-                        </div>
+                        <span class="skill-name">React (learning)</span>
+                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 55%"></div></div>
                     </div>
                     <div class="skill-item">
-                        <span class="skill-name">Next.js</span>
-                        <div class="skill-bar">
-                            <div class="skill-bar-fill" style="width: 45%">45% (learning)</div>
-                        </div>
+                        <span class="skill-name">Next.js (learning)</span>
+                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 45%"></div></div>
                     </div>
                 </div>
                 
@@ -337,15 +332,11 @@ function getWindowContent(appName) {
                     <h4>🔧 Backend</h4>
                     <div class="skill-item">
                         <span class="skill-name">Django</span>
-                        <div class="skill-bar">
-                            <div class="skill-bar-fill" style="width: 60%">60%</div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 60%"></div></div>
                     </div>
                     <div class="skill-item">
                         <span class="skill-name">Python</span>
-                        <div class="skill-bar">
-                            <div class="skill-bar-fill" style="width: 60%">60%</div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 60%"></div></div>
                     </div>
                 </div>
                 
@@ -353,21 +344,15 @@ function getWindowContent(appName) {
                     <h4>🌟 Non-Technical</h4>
                     <div class="skill-item">
                         <span class="skill-name">Communication</span>
-                        <div class="skill-bar">
-                            <div class="skill-bar-fill" style="width: 85%">85%</div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 85%"></div></div>
                     </div>
                     <div class="skill-item">
                         <span class="skill-name">Presentation</span>
-                        <div class="skill-bar">
-                            <div class="skill-bar-fill" style="width: 85%">85%</div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 85%"></div></div>
                     </div>
                     <div class="skill-item">
                         <span class="skill-name">Music</span>
-                        <div class="skill-bar">
-                            <div class="skill-bar-fill" style="width: 70%">70%</div>
-                        </div>
+                        <div class="skill-bar"><div class="skill-bar-fill" style="width: 70%"></div></div>
                     </div>
                 </div>
             </div>
@@ -381,171 +366,80 @@ function getWindowContent(appName) {
                 <button class="filter-btn" data-filter="figma">Figma</button>
             </div>
             <div class="projects-grid" id="projectsGrid">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p>Loading projects...</p>
-                </div>
+                <div class="loading"><div class="spinner"></div><p>Loading projects...</p></div>
             </div>
         `,
         
         github: `
-            <div class="terminal-content">
-                <div><span class="terminal-prompt">anjisha@portfolio:~$</span> github-stats --user ${GITHUB_USERNAME}</div>
-                <div id="githubStatsContent">
-                    <div class="loading">
-                        <div class="spinner"></div>
-                        <p>Fetching GitHub statistics...</p>
-                    </div>
-                </div>
+            <h2>GitHub Statistics</h2>
+            <div id="githubContent">
+                <div class="loading"><div class="spinner"></div><p>Loading GitHub data...</p></div>
             </div>
         `,
         
         contact: `
             <h2>Get In Touch</h2>
-            <div class="contact-grid">
-                <div class="contact-info">
-                    <h3>📧 Contact Information</h3>
-                    <div class="contact-item">
-                        <span>📧</span>
-                        <a href="mailto:punangisha@gmail.com">punangisha@gmail.com</a>
-                    </div>
-                    <div class="contact-item">
-                        <span>💼</span>
-                        <a href="https://www.linkedin.com/in/anjisha-pun-aaa1a6349/" target="_blank">LinkedIn Profile</a>
-                    </div>
-                    <div class="contact-item">
-                        <span>💻</span>
-                        <a href="https://github.com/anjisha616" target="_blank">GitHub Profile</a>
-                    </div>
-                </div>
-                
-                <form class="contact-form" id="contactForm">
-                    <h3>📨 Send a Message</h3>
-                    <div class="form-group">
-                        <label>Your Name</label>
-                        <input type="text" placeholder="John Doe" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Your Email</label>
-                        <input type="email" placeholder="john@example.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Message</label>
-                        <textarea rows="5" placeholder="Your message here..." required></textarea>
-                    </div>
-                    <button type="submit" class="submit-btn">📤 Send Message</button>
-                </form>
-            </div>
-        `,
-        
-        resume: `
-            <h2>Resume</h2>
-            <p>Download my resume to learn more about my skills and experience.</p>
-            <button class="submit-btn" onclick="alert('Add your resume download link here!')">📥 Download Resume (PDF)</button>
+            <p><strong>Email:</strong> <a href="mailto:punangisha@gmail.com">punangisha@gmail.com</a></p>
+            <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/anjisha-pun-aaa1a6349/" target="_blank">View Profile</a></p>
+            <p><strong>GitHub:</strong> <a href="https://github.com/anjisha616" target="_blank">@anjisha616</a></p>
+            <h3>Send Message</h3>
+            <form id="contactForm" style="display: grid; gap: 15px; max-width: 500px;">
+                <input type="text" placeholder="Your Name" required style="padding: 10px; border-radius: 6px; border: 1px solid #ddd;">
+                <input type="email" placeholder="Your Email" required style="padding: 10px; border-radius: 6px; border: 1px solid #ddd;">
+                <textarea placeholder="Message" rows="5" required style="padding: 10px; border-radius: 6px; border: 1px solid #ddd;"></textarea>
+                <button type="submit" style="padding: 12px; background: #87CEEB; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Send</button>
+            </form>
         `
     };
     
-    return content[appName] || '<p>Content not found</p>';
+    return content[app] || '<p>Content not found</p>';
 }
 
-// ============================================
-// WINDOW CONTROLS
-// ============================================
-
-function initWindowControls(windowElement, windowState) {
-    const minimizeBtn = windowElement.querySelector('.minimize');
-    const maximizeBtn = windowElement.querySelector('.maximize');
-    const closeBtn = windowElement.querySelector('.close');
-    
-    minimizeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        minimizeWindow(windowElement, windowState);
+// Window controls
+function initWindowControls(win, winState) {
+    win.querySelector('.minimize').addEventListener('click', () => {
+        win.style.display = 'none';
+        winState.minimized = true;
+        updateWindowButtons();
     });
     
-    maximizeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleMaximize(windowElement, windowState);
+    win.querySelector('.maximize').addEventListener('click', () => {
+        winState.maximized = !winState.maximized;
+        win.classList.toggle('maximized');
     });
     
-    closeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        closeWindow(windowElement, windowState);
+    win.querySelector('.close').addEventListener('click', () => {
+        win.style.opacity = '0';
+        setTimeout(() => {
+            win.remove();
+            state.windows = state.windows.filter(w => w !== winState);
+            updateWindowButtons();
+        }, 200);
     });
     
-    // Click to focus
-    windowElement.addEventListener('mousedown', () => {
-        focusWindow(windowElement);
-    });
+    win.addEventListener('mousedown', () => focusWindow(win));
 }
 
-function minimizeWindow(windowElement, windowState) {
-    windowElement.classList.add('minimized');
-    windowState.minimized = true;
-    setTimeout(() => {
-        windowElement.style.display = 'none';
-    }, 300);
-    updateWindowList();
+function focusWindow(win) {
+    document.querySelectorAll('.window').forEach(w => w.style.border = 'none');
+    win.style.border = '2px solid var(--accent)';
+    win.style.zIndex = state.nextZIndex++;
+    state.activeWindow = win;
+    updateWindowButtons();
 }
 
-function restoreWindow(windowElement) {
-    windowElement.style.display = 'flex';
-    setTimeout(() => {
-        windowElement.classList.remove('minimized');
-        windowElement.style.opacity = '1';
-        windowElement.style.transform = 'scale(1)';
-    }, 10);
-    
-    const windowState = state.windows.find(w => w.element === windowElement);
-    if (windowState) {
-        windowState.minimized = false;
-    }
-    updateWindowList();
-}
-
-function toggleMaximize(windowElement, windowState) {
-    windowState.maximized = !windowState.maximized;
-    windowElement.classList.toggle('maximized');
-}
-
-function closeWindow(windowElement, windowState) {
-    windowElement.style.opacity = '0';
-    windowElement.style.transform = 'scale(0.9)';
-    
-    setTimeout(() => {
-        windowElement.remove();
-        state.windows = state.windows.filter(w => w !== windowState);
-        updateWindowList();
-    }, 200);
-}
-
-function focusWindow(windowElement) {
-    // Remove active from all windows
-    document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
-    
-    // Add active to clicked window
-    windowElement.classList.add('active');
-    windowElement.style.zIndex = state.nextZIndex++;
-    
-    // Update state
-    state.activeWindow = windowElement;
-}
-
-// ============================================
-// WINDOW DRAGGING
-// ============================================
-
-function makeWindowDraggable(windowElement) {
-    const header = windowElement.querySelector('.window-header');
+function makeDraggable(win) {
+    const titlebar = win.querySelector('.window-titlebar');
     let isDragging = false;
-    let currentX, currentY, initialX, initialY;
+    let offsetX, offsetY;
     
-    header.addEventListener('mousedown', (e) => {
+    titlebar.addEventListener('mousedown', (e) => {
         if (e.target.closest('.window-controls')) return;
-        if (windowElement.classList.contains('maximized')) return;
+        if (win.classList.contains('maximized')) return;
         
         isDragging = true;
-        initialX = e.clientX - windowElement.offsetLeft;
-        initialY = e.clientY - windowElement.offsetTop;
+        offsetX = e.clientX - win.offsetLeft;
+        offsetY = e.clientY - win.offsetTop;
         
         document.addEventListener('mousemove', drag);
         document.addEventListener('mouseup', stopDrag);
@@ -553,20 +447,8 @@ function makeWindowDraggable(windowElement) {
     
     function drag(e) {
         if (!isDragging) return;
-        
-        e.preventDefault();
-        currentX = e.clientX - initialX;
-        currentY = e.clientY - initialY;
-        
-        // Keep window in bounds
-        const maxX = window.innerWidth - 100;
-        const maxY = window.innerHeight - 100;
-        
-        currentX = Math.max(0, Math.min(currentX, maxX));
-        currentY = Math.max(0, Math.min(currentY, maxY));
-        
-        windowElement.style.left = currentX + 'px';
-        windowElement.style.top = currentY + 'px';
+        win.style.left = (e.clientX - offsetX) + 'px';
+        win.style.top = Math.max(0, e.clientY - offsetY) + 'px';
     }
     
     function stopDrag() {
@@ -576,347 +458,115 @@ function makeWindowDraggable(windowElement) {
     }
 }
 
-// ============================================
-// WINDOW LIST (TOP PANEL)
-// ============================================
-
-function updateWindowList() {
-    const windowList = document.getElementById('windowList');
-    windowList.innerHTML = '';
-    
-    state.windows.forEach(windowState => {
-        if (!windowState.minimized) {
-            const btn = document.createElement('button');
-            btn.className = 'window-list-item';
-            btn.textContent = windowState.element.querySelector('.window-title').textContent;
-            
-            if (windowState.element === state.activeWindow) {
-                btn.classList.add('active');
-            }
-            
-            btn.addEventListener('click', () => {
-                focusWindow(windowState.element);
-            });
-            
-            windowList.appendChild(btn);
-        }
-    });
-}
-
-// ============================================
-// TASKBAR
-// ============================================
-
-function initTaskbar() {
-    const showDesktopBtn = document.getElementById('showDesktop');
-    
-    showDesktopBtn.addEventListener('click', () => {
-        const allMinimized = state.windows.every(w => w.minimized);
-        
-        if (allMinimized) {
-            // Restore all
-            state.windows.forEach(w => {
-                if (w.minimized) {
-                    restoreWindow(w.element);
-                }
-            });
-        } else {
-            // Minimize all
-            state.windows.forEach(w => {
-                if (!w.minimized) {
-                    minimizeWindow(w.element, w);
-                }
-            });
-        }
-    });
-}
-
-// ============================================
-// CONTEXT MENU
-// ============================================
-
-function initContextMenu() {
-    const desktop = document.getElementById('desktop');
-    const contextMenu = document.getElementById('contextMenu');
-    
-    desktop.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        
-        contextMenu.style.left = e.clientX + 'px';
-        contextMenu.style.top = e.clientY + 'px';
-        contextMenu.classList.add('active');
-    });
-    
-    document.addEventListener('click', () => {
-        contextMenu.classList.remove('active');
-    });
-    
-    // Context menu actions
-    contextMenu.querySelectorAll('.context-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const action = item.dataset.action;
-            
-            if (action === 'refresh') {
-                location.reload();
-            } else if (action === 'arrange') {
-                // Arrange icons (could implement grid snapping)
-                alert('Icons arranged!');
-            } else if (action === 'about') {
-                openWindow('about');
-            }
-        });
-    });
-}
-
-// ============================================
-// GITHUB API - LOAD PROJECTS
-// ============================================
+// ==================== GITHUB API ====================
 
 async function loadProjects() {
-    const projectsGrid = document.getElementById('projectsGrid');
+    const grid = document.getElementById('projectsGrid');
     
     try {
-        const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
-        const repos = await response.json();
+        const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
+        const repos = await res.json();
         
-        // Filter and sort
-        const filteredRepos = repos.filter(repo => 
-            !EXCLUDED_REPOS.includes(repo.name.toLowerCase()) && !repo.fork
-        ).sort((a, b) => b.stargazers_count - a.stargazers_count).slice(0, 6);
+        const filtered = repos.filter(r => !EXCLUDED_REPOS.includes(r.name.toLowerCase()) && !r.fork)
+            .sort((a, b) => b.stargazers_count - a.stargazers_count)
+            .slice(0, 6);
         
-        // Clear loading
-        projectsGrid.innerHTML = '';
+        grid.innerHTML = '';
         
-        // Add GitHub repos
-        filteredRepos.forEach(repo => {
-            const card = createProjectCard(repo, 'github');
-            projectsGrid.appendChild(card);
+        filtered.forEach(repo => {
+            const card = document.createElement('div');
+            card.className = 'project-card github';
+            card.dataset.source = 'github';
+            card.innerHTML = `
+                <div class="project-icon">📁</div>
+                <div class="project-name">${repo.name}</div>
+                <div class="project-desc">${repo.description || 'No description'}</div>
+                <div class="project-meta">
+                    <span>⭐ ${repo.stargazers_count}</span>
+                    <span>🔄 ${repo.forks_count}</span>
+                    <span>${repo.language || 'Code'}</span>
+                </div>
+            `;
+            card.addEventListener('click', () => window.open(repo.html_url, '_blank'));
+            grid.appendChild(card);
         });
         
         // Add Figma projects
-        addFigmaProjects(projectsGrid);
+        const figma = [
+            { name: 'UI Components', desc: 'Design system library' },
+            { name: 'Mobile Apps', desc: 'App UI designs' },
+            { name: 'Landing Pages', desc: 'Web design concepts' }
+        ];
+        
+        figma.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'project-card figma';
+            card.dataset.source = 'figma';
+            card.innerHTML = `
+                <div class="project-icon">🎨</div>
+                <div class="project-name">${p.name}</div>
+                <div class="project-desc">${p.desc}</div>
+                <div class="project-meta"><span>Figma Design</span></div>
+            `;
+            card.addEventListener('click', () => window.open('https://www.figma.com/files/team/1375711861175707486/project/237173255', '_blank'));
+            grid.appendChild(card);
+        });
         
         // Init filters
-        initProjectFilters();
-        
-    } catch (error) {
-        projectsGrid.innerHTML = '<p style="color: red;">Failed to load projects. Please try again later.</p>';
-    }
-}
-
-function createProjectCard(repo, source) {
-    const card = document.createElement('div');
-    card.className = `project-card ${source}`;
-    card.dataset.source = source;
-    
-    if (source === 'github') {
-        card.innerHTML = `
-            <div class="project-icon">🗂️</div>
-            <div class="project-name">${repo.name}</div>
-            <div class="project-desc">${repo.description || 'No description'}</div>
-            <div class="project-meta">
-                <span>⭐ ${repo.stargazers_count}</span>
-                <span>🔄 ${repo.forks_count}</span>
-                <span>${repo.language || 'Code'}</span>
-            </div>
-        `;
-        
-        card.addEventListener('click', () => {
-            window.open(repo.html_url, '_blank');
-        });
-    } else if (source === 'figma') {
-        card.innerHTML = `
-            <div class="project-icon">🎨</div>
-            <div class="project-name">${repo.name}</div>
-            <div class="project-desc">${repo.description}</div>
-            <div class="project-meta">
-                <span>Figma Design</span>
-            </div>
-        `;
-        
-        card.addEventListener('click', () => {
-            window.open(repo.url, '_blank');
-        });
-    }
-    
-    return card;
-}
-
-function addFigmaProjects(container) {
-    const figmaProjects = [
-        {
-            name: 'UI Component Library',
-            description: 'Comprehensive design system with reusable components',
-            url: 'https://www.figma.com/files/team/1375711861175707486/project/237173255'
-        },
-        {
-            name: 'Mobile App Designs',
-            description: 'Collection of mobile UI/UX designs',
-            url: 'https://www.figma.com/files/team/1375711861175707486/project/237173255'
-        },
-        {
-            name: 'Landing Pages',
-            description: 'Modern landing page concepts',
-            url: 'https://www.figma.com/files/team/1375711861175707486/project/237173255'
-        }
-    ];
-    
-    figmaProjects.forEach(project => {
-        const card = createProjectCard(project, 'figma');
-        container.appendChild(card);
-    });
-}
-
-function initProjectFilters() {
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const projectCards = document.querySelectorAll('.project-card');
-    
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const filter = btn.dataset.filter;
-            
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            projectCards.forEach(card => {
-                if (filter === 'all' || card.dataset.source === filter) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filter = btn.dataset.filter;
+                document.querySelectorAll('.project-card').forEach(card => {
+                    card.style.display = (filter === 'all' || card.dataset.source === filter) ? 'block' : 'none';
+                });
             });
         });
-    });
-}
-
-// ============================================
-// GITHUB API - LOAD STATS
-// ============================================
-
-async function loadGitHubStats() {
-    const statsContent = document.getElementById('githubStatsContent');
-    
-    try {
-        const userResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
-        const userData = await userResponse.json();
         
-        const eventsResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events/public?per_page=100`);
-        const events = await eventsResponse.json();
-        
-        const pushEvents = events.filter(e => e.type === 'PushEvent');
-        const totalCommits = pushEvents.reduce((sum, e) => sum + (e.payload.commits?.length || 0), 0);
-        
-        const reposResponse = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100`);
-        const repos = await reposResponse.json();
-        
-        const languages = {};
-        repos.forEach(repo => {
-            if (repo.language) {
-                languages[repo.language] = (languages[repo.language] || 0) + 1;
-            }
-        });
-        
-        const topLanguages = Object.entries(languages).sort((a, b) => b[1] - a[1]).slice(0, 5);
-        
-        statsContent.innerHTML = `
-            <div class="terminal-output">
-                <p>📊 GITHUB STATISTICS</p>
-                <p>═══════════════════════════════════════════════</p>
-                <p>Total Repositories:     ${userData.public_repos}</p>
-                <p>Total Commits (recent): ${totalCommits}</p>
-                <p>Followers:              ${userData.followers}</p>
-                <p>Following:              ${userData.following}</p>
-                <p></p>
-                <p>💻 TOP LANGUAGES</p>
-                <p>═══════════════════════════════════════════════</p>
-                ${topLanguages.map(([lang, count]) => `<p>${lang.padEnd(20)} ${count} repos</p>`).join('')}
-                <p></p>
-                <p>📈 CONTRIBUTION GRAPH</p>
-                <p>═══════════════════════════════════════════════</p>
-            </div>
-            <img src="https://ghchart.rshah.org/${GITHUB_USERNAME}" alt="Contribution Graph" style="width: 100%; border-radius: 4px; margin-top: 10px;">
-            <p style="margin-top: 20px; text-align: center;">
-                <a href="https://github.com/${GITHUB_USERNAME}" target="_blank" style="color: var(--mint-primary);">
-                    View Full GitHub Profile →
-                </a>
-            </p>
-        `;
-        
-    } catch (error) {
-        statsContent.innerHTML = '<p style="color: red;">Failed to load GitHub stats.</p>';
+    } catch (err) {
+        grid.innerHTML = '<p style="color: red;">Failed to load projects</p>';
     }
 }
 
-// ============================================
-// THEME
-// ============================================
-
-function initTheme() {
-    const settingsBtn = document.getElementById('settingsBtn');
+async function loadGitHub() {
+    const content = document.getElementById('githubContent');
     
-    settingsBtn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
-    });
+    try {
+        const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
+        const user = await res.json();
+        
+        content.innerHTML = `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0;">
+                <div style="background: rgba(135, 206, 235, 0.1); padding: 20px; border-radius: 10px; border-left: 4px solid var(--accent);">
+                    <h3>Repositories</h3>
+                    <p style="font-size: 2rem; font-weight: bold; color: var(--accent);">${user.public_repos}</p>
+                </div>
+                <div style="background: rgba(135, 206, 235, 0.1); padding: 20px; border-radius: 10px; border-left: 4px solid var(--accent);">
+                    <h3>Followers</h3>
+                    <p style="font-size: 2rem; font-weight: bold; color: var(--accent);">${user.followers}</p>
+                </div>
+            </div>
+            <h3>Contribution Graph</h3>
+            <img src="https://ghchart.rshah.org/${GITHUB_USERNAME}" style="width: 100%; border-radius: 8px; margin-top: 10px;">
+            <p style="text-align: center; margin-top: 20px;">
+                <a href="https://github.com/${GITHUB_USERNAME}" target="_blank" style="color: var(--accent);">View Full Profile →</a>
+            </p>
+        `;
+    } catch (err) {
+        content.innerHTML = '<p style="color: red;">Failed to load GitHub data</p>';
+    }
 }
 
-// ============================================
-// KONAMI CODE EASTER EGG
-// ============================================
-
-function initKonamiCode() {
-    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-    let konamiProgress = 0;
-    
-    document.addEventListener('keydown', (e) => {
-        if (e.key === konamiCode[konamiProgress]) {
-            konamiProgress++;
-            if (konamiProgress === konamiCode.length) {
-                activateKonamiEasterEgg();
-                konamiProgress = 0;
-            }
-        } else {
-            konamiProgress = 0;
-        }
-    });
-}
-
-function activateKonamiEasterEgg() {
-    // Change theme colors
-    document.documentElement.style.setProperty('--mint-primary', '#00ff00');
-    document.documentElement.style.setProperty('--mint-dark', '#00cc00');
-    
-    alert('🐧 KONAMI CODE ACTIVATED! Linux Mint transformed into Ubuntu!');
-    
-    setTimeout(() => {
-        document.documentElement.style.setProperty('--mint-primary', '#8fa876');
-        document.documentElement.style.setProperty('--mint-dark', '#5d7a4a');
-    }, 10000);
-}
-
-// ============================================
-// CONTACT FORM
-// ============================================
-
+// Contact form
 document.addEventListener('submit', (e) => {
     if (e.target.id === 'contactForm') {
         e.preventDefault();
-        alert('📧 Message sent successfully! (This is a demo - implement your form backend)');
+        alert('Message sent! (Demo - implement backend)');
         e.target.reset();
     }
 });
 
-// ============================================
-// CONSOLE EASTER EGG
-// ============================================
-
-console.log('%c🐧 Linux Mint Portfolio OS', 'font-size: 24px; color: #8fa876; font-weight: bold');
-console.log('%cDesigned by Anjisha Pun', 'font-size: 14px; color: #5d7a4a');
-console.log('%c\nEaster Eggs:', 'font-size: 12px; color: #8fa876; font-weight: bold');
-console.log('%c1. Konami Code: ↑↑↓↓←→←→BA', 'color: #666');
-console.log('%c2. Right-click desktop for context menu', 'color: #666');
-console.log('%c3. Toggle theme with settings icon', 'color: #666');
-
-console.log('%c\nTech Stack:', 'font-size: 12px; color: #8fa876; font-weight: bold');
-console.log('%c- Pure HTML, CSS, JavaScript', 'color: #666');
-console.log('%c- GitHub API Integration', 'color: #666');
-console.log('%c- Responsive Design', 'color: #666');
+console.log('%c🐧 Linux Mint Portfolio', 'font-size: 20px; color: #87CEEB; font-weight: bold');
+console.log('%cDesigned by Anjisha Pun', 'color: #888');
