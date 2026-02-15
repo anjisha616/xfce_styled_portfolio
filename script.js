@@ -181,21 +181,30 @@ function updateWindowButtons() {
     container.innerHTML = '';
     
     state.windows.forEach(win => {
-        if (!win.minimized) {
-            const btn = document.createElement('button');
-            btn.className = 'window-button';
-            btn.textContent = win.title;
-            
-            if (win.element === state.activeWindow) {
-                btn.classList.add('active');
-            }
-            
-            btn.addEventListener('click', () => {
-                focusWindow(win.element);
-            });
-            
-            container.appendChild(btn);
+        const btn = document.createElement('button');
+        btn.className = 'window-button';
+        btn.textContent = win.title;
+        
+        if (!win.minimized && win.element === state.activeWindow) {
+            btn.classList.add('active');
         }
+        
+        btn.addEventListener('click', () => {
+            if (win.minimized) {
+                win.element.style.display = '';
+                win.minimized = false;
+                focusWindow(win.element);
+            } else if (win.element === state.activeWindow) {
+                win.element.style.display = 'none';
+                win.minimized = true;
+                state.activeWindow = null;
+            } else {
+                focusWindow(win.element);
+            }
+            updateWindowButtons();
+        });
+        
+        container.appendChild(btn);
     });
 }
 
