@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anjisha Pun - Portfolio OS</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%238fa876'/><text x='50' y='65' text-anchor='middle' fill='%23fff' font-size='50' font-family='monospace'>AP</text></svg>">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Boot Screen -->
+    <div id="bootScreen" class="boot-screen">
+        <div class="boot-logo">🐧</div>
+        <div class="boot-text">Linux Mint Portfolio</div>
+        <div class="boot-version">Anjisha Edition v1.0</div>
+        <div class="boot-progress">
+            <div class="boot-progress-bar"></div>
+        </div>
+        <div class="boot-status">Loading desktop environment...</div>
+    </div>
+
+    <!-- Top Panel -->
+    <div class="panel-top">
+        <div class="panel-left">
+            <button class="menu-button" id="menuButton">
+                <span class="mint-logo">🐧</span>
+                <span>Menu</span>
+            </button>
+            <div class="window-list" id="windowList"></div>
+        </div>
+        <div class="panel-right">
+            <div class="system-tray">
+                <span class="tray-item clock" id="clock">00:00</span>
+                <span class="tray-item">🔊</span>
+                <span class="tray-item">📶</span>
+                <button class="tray-item settings-btn" id="settingsBtn">⚙️</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Menu -->
+    <div class="app-menu" id="appMenu">
+        <div class="menu-header">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%238fa876'/%3E%3Ctext x='50' y='65' text-anchor='middle' fill='%23fff' font-size='40' font-family='monospace'%3EAP%3C/text%3E%3C/svg%3E" alt="Profile" class="menu-avatar">
+            <div class="menu-user-info">
+                <div class="menu-username">Anjisha Pun</div>
+                <div class="menu-subtitle">UI/UX Designer & Developer</div>
+            </div>
+        </div>
+        <div class="menu-items">
+            <button class="menu-item" data-app="about">
+                <span class="menu-icon">📁</span>
+                <span class="menu-label">About Me</span>
+            </button>
+            <button class="menu-item" data-app="experience">
+                <span class="menu-icon">💼</span>
+                <span class="menu-label">Experience</span>
+            </button>
+            <button class="menu-item" data-app="skills">
+                <span class="menu-icon">⚙️</span>
+                <span class="menu-label">Skills</span>
+            </button>
+            <button class="menu-item" data-app="projects">
+                <span class="menu-icon">🗂️</span>
+                <span class="menu-label">Projects</span>
+            </button>
+            <button class="menu-item" data-app="github">
+                <span class="menu-icon">📊</span>
+                <span class="menu-label">GitHub Stats</span>
+            </button>
+            <button class="menu-item" data-app="contact">
+                <span class="menu-icon">📧</span>
+                <span class="menu-label">Contact</span>
+            </button>
+            <div class="menu-separator"></div>
+            <button class="menu-item" id="downloadResume">
+                <span class="menu-icon">📥</span>
+                <span class="menu-label">Download Resume</span>
+            </button>
+            <button class="menu-item" id="themeToggle">
+                <span class="menu-icon">🌓</span>
+                <span class="menu-label">Toggle Theme</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Desktop -->
+    <div class="desktop" id="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icon" data-app="about" title="Learn more about Anjisha">
+            <div class="icon">📁</div>
+            <div class="icon-label">About_Me.txt</div>
+        </div>
+        
+        <div class="desktop-icon" data-app="experience" title="Work experience and education">
+            <div class="icon">💼</div>
+            <div class="icon-label">Experience.md</div>
+        </div>
+        
+        <div class="desktop-icon" data-app="skills" title="Technical and non-technical skills">
+            <div class="icon">⚙️</div>
+            <div class="icon-label">Skills.app</div>
+        </div>
+        
+        <div class="desktop-icon" data-app="projects" title="Portfolio projects">
+            <div class="icon">🗂️</div>
+            <div class="icon-label">Projects/</div>
+        </div>
+        
+        <div class="desktop-icon" data-app="github" title="GitHub statistics and activity">
+            <div class="icon">📊</div>
+            <div class="icon-label">GitHub_Stats.app</div>
+        </div>
+        
+        <div class="desktop-icon" data-app="contact" title="Get in touch">
+            <div class="icon">📧</div>
+            <div class="icon-label">Contact.app</div>
+        </div>
+        
+        <div class="desktop-icon" data-app="resume" title="Download resume">
+            <div class="icon">📄</div>
+            <div class="icon-label">Resume.pdf</div>
+        </div>
+    </div>
+
+    <!-- Windows Container -->
+    <div class="windows-container" id="windowsContainer"></div>
+
+    <!-- Taskbar -->
+    <div class="taskbar">
+        <div class="taskbar-apps" id="taskbarApps">
+            <button class="taskbar-app" data-app="files" title="File Manager">
+                <span>🗂️</span>
+            </button>
+            <button class="taskbar-app" data-app="terminal" title="Terminal">
+                <span>📝</span>
+            </button>
+            <button class="taskbar-app" data-app="browser" title="Web Browser">
+                <span>🌐</span>
+            </button>
+        </div>
+        <button class="show-desktop" id="showDesktop" title="Show Desktop">
+            <span>⏷</span>
+        </button>
+    </div>
+
+    <!-- Context Menu (Right-click) -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-item" data-action="refresh">🔄 Refresh Desktop</div>
+        <div class="context-item" data-action="arrange">📋 Arrange Icons</div>
+        <div class="context-separator"></div>
+        <div class="context-item" data-action="about">ℹ️ About This Portfolio</div>
+    </div>
+
+    <!-- Window Templates (Hidden) -->
+    <template id="windowTemplate">
+        <div class="window" data-app="">
+            <div class="window-header">
+                <div class="window-title-bar">
+                    <span class="window-icon"></span>
+                    <span class="window-title"></span>
+                </div>
+                <div class="window-controls">
+                    <button class="window-btn minimize" title="Minimize">_</button>
+                    <button class="window-btn maximize" title="Maximize">□</button>
+                    <button class="window-btn close" title="Close">✕</button>
+                </div>
+            </div>
+            <div class="window-content"></div>
+        </div>
+    </template>
+
+    <script src="script.js"></script>
+</body>
+</html>
