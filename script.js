@@ -1335,30 +1335,11 @@ function renderGitHubStats(user, isFallback = false) {
     const content = document.getElementById('githubContent');
     if (!content) return;
 
-    const fallbackNote = isFallback
-        ? '<p style="color: var(--text-muted); margin-top: 8px;">Showing cached stats.</p>'
-        : '';
-
     content.innerHTML = `
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0;">
-            <div style="background: var(--accent-light); padding: 24px; border-radius: 12px; border-left: 4px solid var(--accent); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                <h3 style="margin-bottom: 8px; font-size: 1rem; color: var(--text-muted);">Repositories</h3>
-                <p style="font-size: 2.5rem; font-weight: bold; color: var(--accent); margin: 0;">${user.public_repos || 0}</p>
-            </div>
-            <div style="background: var(--accent-light); padding: 24px; border-radius: 12px; border-left: 4px solid var(--accent); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                <h3 style="margin-bottom: 8px; font-size: 1rem; color: var(--text-muted);">Followers</h3>
-                <p style="font-size: 2.5rem; font-weight: bold; color: var(--accent); margin: 0;">${user.followers || 0}</p>
-            </div>
-            <div style="background: var(--accent-light); padding: 24px; border-radius: 12px; border-left: 4px solid var(--accent); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                <h3 style="margin-bottom: 8px; font-size: 1rem; color: var(--text-muted);">Following</h3>
-                <p style="font-size: 2.5rem; font-weight: bold; color: var(--accent); margin: 0;">${user.following || 0}</p>
-            </div>
-        </div>
-        ${fallbackNote}
-        <h3 style="margin-top: 32px;">Contribution Graph</h3>
+        <h3 style="margin-bottom: 24px;">Contribution Graph</h3>
         <img src="https://ghchart.rshah.org/${CONFIG.github.username}" 
              alt="GitHub contribution graph" 
-             style="width: 100%; border-radius: 8px; margin-top: 16px; background: white; padding: 10px;"
+             style="width: 100%; border-radius: 8px; background: white; padding: 10px;"
              loading="lazy">
         <p style="text-align: center; margin-top: 24px;">
             <a href="https://github.com/${CONFIG.github.username}" 
