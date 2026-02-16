@@ -339,6 +339,70 @@ const GitHubService = {
         
         State.setCache(cacheKey, filtered);
         return filtered;
+    },
+
+    async getPinnedRepositories() {
+        if (!CONFIG.github.token) {
+            throw new Error('GitHub token required to load pinned repositories.');
+        }
+
+        const cacheKey = 'github_pinned';
+        const cached = State.getCache(cacheKey);
+        if (cached) return cached;
+
+        const query = `
+            query($login: String!) {
+                user(login: $login) {
+                    pinnedItems(first: 6, types: REPOSITORY) {
+                        nodes {
+                            ... on Repository {
+                                name
+                                description
+                                stargazerCount
+                                forkCount
+                                primaryLanguage { name }
+                                url
+                            }
+                        }
+                    }
+                }
+            }
+        `;
+
+        const response = await fetch('https://api.github.com/graphql', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github+json',
+                Authorization: `bearer ${CONFIG.github.token}`
+            },
+            body: JSON.stringify({
+                query,
+                variables: { login: CONFIG.github.username }
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`GitHub GraphQL error: ${response.status}`);
+        }
+
+        const payload = await response.json();
+        if (payload.errors) {
+            throw new Error(payload.errors[0]?.message || 'GitHub GraphQL error');
+        }
+
+        const nodes = payload.data?.user?.pinnedItems?.nodes || [];
+        const mapped = nodes.map(repo => ({
+            name: repo.name,
+            description: repo.description,
+            stargazers_count: repo.stargazerCount,
+            forks_count: repo.forkCount,
+            language: repo.primaryLanguage?.name,
+            html_url: repo.url
+        }));
+
+        State.setCache(cacheKey, mapped);
+        return mapped;
     }
 };
 
@@ -1093,7 +1157,24 @@ async function loadProjects() {
     if (!grid) return;
     
     try {
-        const repos = await GitHubService.getRepositories();
+        let repos = [];
+
+        try {
+            repos = await GitHubService.getPinnedRepositories();
+        } catch (pinnedError) {
+            const fallbackRepos = Array.isArray(CONFIG.github.fallbackRepos)
+                ? CONFIG.github.fallbackRepos
+                : [];
+
+            if (fallbackRepos.length) {
+                renderProjects(fallbackRepos, true);
+                Toast.warning('Pinned repos unavailable. Showing fallback projects.');
+                return;
+            }
+
+            repos = await GitHubService.getRepositories();
+        }
+
         renderProjects(repos);
         
     } catch (err) {
