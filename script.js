@@ -17,28 +17,36 @@ const CONFIG = {
         },
         fallbackRepos: [
             {
-                name: 'portfolio-desktop',
-                description: 'Linux Mint inspired portfolio UI',
-                stargazers_count: 8,
-                forks_count: 2,
+                name: 'spiderman_landonorris-clone-',
+                description: 'A clone project inspired by Spider-Man and Lando Norris.',
+                stargazers_count: 0,
+                forks_count: 0,
                 language: 'JavaScript',
-                html_url: 'https://github.com/anjisha616/portfolio-desktop'
+                html_url: 'https://github.com/anjisha616/spiderman_landonorris-clone-'
             },
             {
-                name: 'ui-components',
-                description: 'Reusable UI kit and components',
-                stargazers_count: 5,
-                forks_count: 1,
-                language: 'CSS',
-                html_url: 'https://github.com/anjisha616/ui-components'
+                name: 'Team-Devi',
+                description: 'Team Devi project repository.',
+                stargazers_count: 0,
+                forks_count: 0,
+                language: 'JavaScript',
+                html_url: 'https://github.com/anjisha616/Team-Devi'
             },
             {
-                name: 'landing-pages',
-                description: 'Collection of landing page designs',
-                stargazers_count: 4,
-                forks_count: 1,
-                language: 'HTML',
-                html_url: 'https://github.com/anjisha616/landing-pages'
+                name: 'Typeflow',
+                description: 'Typeflow project repository.',
+                stargazers_count: 0,
+                forks_count: 0,
+                language: 'JavaScript',
+                html_url: 'https://github.com/anjisha616/Typeflow'
+            },
+            {
+                name: 'jukebox_themed_portfolio',
+                description: 'A portfolio with a jukebox theme.',
+                stargazers_count: 0,
+                forks_count: 0,
+                language: 'JavaScript',
+                html_url: 'https://github.com/anjisha616/jukebox_themed_portfolio'
             }
         ],
         apiBaseUrl: 'https://api.github.com',
