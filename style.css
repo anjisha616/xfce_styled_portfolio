@@ -213,19 +213,19 @@ button:focus-visible {
     position: fixed;
     inset: 0;
     bottom: 48px;
-    background: 
-        linear-gradient(135deg, 
-            rgba(255, 107, 53, 0.25) 0%, 
-            rgba(139, 69, 158, 0.25) 50%, 
+    background:
+        linear-gradient(135deg,
+            rgba(255, 107, 53, 0.25) 0%,
+            rgba(139, 69, 158, 0.25) 50%,
             rgba(30, 144, 255, 0.25) 100%
         ),
-        linear-gradient(180deg, 
-            rgba(0, 0, 0, 0.3) 0%, 
+        linear-gradient(180deg,
+            rgba(0, 0, 0, 0.3) 0%,
             rgba(0, 0, 0, 0.1) 100%
         ),
         radial-gradient(circle at 20% 50%, rgba(135, 206, 235, 0.15) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(139, 69, 158, 0.15) 0%, transparent 50%),
-        #1a1a2e;
+        url('images/mainwall.jpeg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
