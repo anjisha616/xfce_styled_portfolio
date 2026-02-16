@@ -10,6 +10,37 @@ const CONFIG = {
         username: 'anjisha616',
         token: '',
         excludedRepos: ['cafe-clone', 'netflix-clone', 'starbucks-clone'],
+        fallbackUser: {
+            public_repos: 12,
+            followers: 120,
+            following: 80
+        },
+        fallbackRepos: [
+            {
+                name: 'portfolio-desktop',
+                description: 'Linux Mint inspired portfolio UI',
+                stargazers_count: 8,
+                forks_count: 2,
+                language: 'JavaScript',
+                html_url: 'https://github.com/anjisha616/portfolio-desktop'
+            },
+            {
+                name: 'ui-components',
+                description: 'Reusable UI kit and components',
+                stargazers_count: 5,
+                forks_count: 1,
+                language: 'CSS',
+                html_url: 'https://github.com/anjisha616/ui-components'
+            },
+            {
+                name: 'landing-pages',
+                description: 'Collection of landing page designs',
+                stargazers_count: 4,
+                forks_count: 1,
+                language: 'HTML',
+                html_url: 'https://github.com/anjisha616/landing-pages'
+            }
+        ],
         apiBaseUrl: 'https://api.github.com',
         cacheTimeout: 5 * 60 * 1000 // 5 minutes
     },
@@ -1063,71 +1094,20 @@ async function loadProjects() {
     
     try {
         const repos = await GitHubService.getRepositories();
-        
-        grid.innerHTML = '';
-        
-        repos.forEach((repo, index) => {
-            const card = document.createElement('div');
-            card.className = 'project-card github';
-            card.dataset.source = 'github';
-            card.style.animationDelay = `${index * 0.05}s`;
-            card.innerHTML = `
-                <div class="project-icon">📁</div>
-                <div class="project-name">${Utils.sanitizeHTML(repo.name)}</div>
-                <div class="project-desc">${Utils.sanitizeHTML(repo.description || 'No description')}</div>
-                <div class="project-meta">
-                    <span>⭐ ${repo.stargazers_count}</span>
-                    <span>🔄 ${repo.forks_count}</span>
-                    <span>${Utils.sanitizeHTML(repo.language || 'Code')}</span>
-                </div>
-            `;
-            card.addEventListener('click', () => {
-                window.open(repo.html_url, '_blank', 'noopener,noreferrer');
-            });
-            card.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    window.open(repo.html_url, '_blank', 'noopener,noreferrer');
-                }
-            });
-            card.setAttribute('tabindex', '0');
-            card.setAttribute('role', 'button');
-            card.setAttribute('aria-label', `Open ${repo.name} project on GitHub`);
-            grid.appendChild(card);
-        });
-        
-        // Add Figma projects
-        const figmaProjects = [
-            { name: 'UI Components', desc: 'Design system library' },
-            { name: 'Mobile Apps', desc: 'App UI designs' },
-            { name: 'Landing Pages', desc: 'Web design concepts' }
-        ];
-        
-        figmaProjects.forEach((p, index) => {
-            const card = document.createElement('div');
-            card.className = 'project-card figma';
-            card.dataset.source = 'figma';
-            card.style.animationDelay = `${(repos.length + index) * 0.05}s`;
-            card.innerHTML = `
-                <div class="project-icon">🎨</div>
-                <div class="project-name">${p.name}</div>
-                <div class="project-desc">${p.desc}</div>
-                <div class="project-meta"><span>Figma Design</span></div>
-            `;
-            card.addEventListener('click', () => {
-                window.open('https://www.figma.com/files/team/1375711861175707486/project/237173255', '_blank', 'noopener,noreferrer');
-            });
-            card.setAttribute('tabindex', '0');
-            card.setAttribute('role', 'button');
-            card.setAttribute('aria-label', `Open ${p.name} Figma project`);
-            grid.appendChild(card);
-        });
-        
-        // Init filters
-        initProjectFilters();
+        renderProjects(repos);
         
     } catch (err) {
         console.error('Failed to load projects:', err);
+        const fallbackRepos = Array.isArray(CONFIG.github.fallbackRepos)
+            ? CONFIG.github.fallbackRepos
+            : [];
+
+        if (fallbackRepos.length) {
+            renderProjects(fallbackRepos, true);
+            Toast.warning('GitHub limit reached. Showing fallback projects.');
+            return;
+        }
+
         grid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
                 <p style="color: var(--danger);">Failed to load projects</p>
@@ -1170,38 +1150,17 @@ async function loadGitHub() {
     
     try {
         const user = await GitHubService.getUser();
-        
-        content.innerHTML = `
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0;">
-                <div style="background: var(--accent-light); padding: 24px; border-radius: 12px; border-left: 4px solid var(--accent); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <h3 style="margin-bottom: 8px; font-size: 1rem; color: var(--text-muted);">Repositories</h3>
-                    <p style="font-size: 2.5rem; font-weight: bold; color: var(--accent); margin: 0;">${user.public_repos}</p>
-                </div>
-                <div style="background: var(--accent-light); padding: 24px; border-radius: 12px; border-left: 4px solid var(--accent); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <h3 style="margin-bottom: 8px; font-size: 1rem; color: var(--text-muted);">Followers</h3>
-                    <p style="font-size: 2.5rem; font-weight: bold; color: var(--accent); margin: 0;">${user.followers}</p>
-                </div>
-                <div style="background: var(--accent-light); padding: 24px; border-radius: 12px; border-left: 4px solid var(--accent); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <h3 style="margin-bottom: 8px; font-size: 1rem; color: var(--text-muted);">Following</h3>
-                    <p style="font-size: 2.5rem; font-weight: bold; color: var(--accent); margin: 0;">${user.following}</p>
-                </div>
-            </div>
-            <h3 style="margin-top: 32px;">Contribution Graph</h3>
-            <img src="https://ghchart.rshah.org/${CONFIG.github.username}" 
-                 alt="GitHub contribution graph" 
-                 style="width: 100%; border-radius: 8px; margin-top: 16px; background: white; padding: 10px;"
-                 loading="lazy">
-            <p style="text-align: center; margin-top: 24px;">
-                <a href="https://github.com/${CONFIG.github.username}" 
-                   target="_blank" 
-                   rel="noopener noreferrer"
-                   style="color: var(--accent); font-weight: 500; font-size: 1.05rem;">
-                    View Full Profile →
-                </a>
-            </p>
-        `;
+        renderGitHubStats(user);
     } catch (err) {
         console.error('Failed to load GitHub data:', err);
+        const fallbackUser = CONFIG.github.fallbackUser || null;
+
+        if (fallbackUser) {
+            renderGitHubStats(fallbackUser, true);
+            Toast.warning('GitHub limit reached. Showing fallback stats.');
+            return;
+        }
+
         content.innerHTML = `
             <div style="text-align: center; padding: 40px;">
                 <p style="color: var(--danger);">Failed to load GitHub data</p>
@@ -1213,6 +1172,122 @@ async function loadGitHub() {
         `;
         Toast.error('Failed to load GitHub data. Please try again.');
     }
+}
+
+function renderProjects(repos, isFallback = false) {
+    const grid = document.getElementById('projectsGrid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+
+    if (isFallback) {
+        const note = document.createElement('div');
+        note.style.gridColumn = '1 / -1';
+        note.style.marginBottom = '12px';
+        note.style.color = 'var(--text-muted)';
+        note.textContent = 'Showing cached projects.';
+        grid.appendChild(note);
+    }
+
+    repos.forEach((repo, index) => {
+        const card = document.createElement('div');
+        card.className = 'project-card github';
+        card.dataset.source = 'github';
+        card.style.animationDelay = `${index * 0.05}s`;
+        card.innerHTML = `
+            <div class="project-icon">📁</div>
+            <div class="project-name">${Utils.sanitizeHTML(repo.name)}</div>
+            <div class="project-desc">${Utils.sanitizeHTML(repo.description || 'No description')}</div>
+            <div class="project-meta">
+                <span>⭐ ${repo.stargazers_count || 0}</span>
+                <span>🔄 ${repo.forks_count || 0}</span>
+                <span>${Utils.sanitizeHTML(repo.language || 'Code')}</span>
+            </div>
+        `;
+        if (repo.html_url) {
+            card.addEventListener('click', () => {
+                window.open(repo.html_url, '_blank', 'noopener,noreferrer');
+            });
+            card.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    window.open(repo.html_url, '_blank', 'noopener,noreferrer');
+                }
+            });
+        }
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Open ${repo.name} project on GitHub`);
+        grid.appendChild(card);
+    });
+
+    const figmaProjects = [
+        { name: 'UI Components', desc: 'Design system library' },
+        { name: 'Mobile Apps', desc: 'App UI designs' },
+        { name: 'Landing Pages', desc: 'Web design concepts' }
+    ];
+
+    figmaProjects.forEach((p, index) => {
+        const card = document.createElement('div');
+        card.className = 'project-card figma';
+        card.dataset.source = 'figma';
+        card.style.animationDelay = `${(repos.length + index) * 0.05}s`;
+        card.innerHTML = `
+            <div class="project-icon">🎨</div>
+            <div class="project-name">${p.name}</div>
+            <div class="project-desc">${p.desc}</div>
+            <div class="project-meta"><span>Figma Design</span></div>
+        `;
+        card.addEventListener('click', () => {
+            window.open('https://www.figma.com/files/team/1375711861175707486/project/237173255', '_blank', 'noopener,noreferrer');
+        });
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Open ${p.name} Figma project`);
+        grid.appendChild(card);
+    });
+
+    initProjectFilters();
+}
+
+function renderGitHubStats(user, isFallback = false) {
+    const content = document.getElementById('githubContent');
+    if (!content) return;
+
+    const fallbackNote = isFallback
+        ? '<p style="color: var(--text-muted); margin-top: 8px;">Showing cached stats.</p>'
+        : '';
+
+    content.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0;">
+            <div style="background: var(--accent-light); padding: 24px; border-radius: 12px; border-left: 4px solid var(--accent); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                <h3 style="margin-bottom: 8px; font-size: 1rem; color: var(--text-muted);">Repositories</h3>
+                <p style="font-size: 2.5rem; font-weight: bold; color: var(--accent); margin: 0;">${user.public_repos || 0}</p>
+            </div>
+            <div style="background: var(--accent-light); padding: 24px; border-radius: 12px; border-left: 4px solid var(--accent); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                <h3 style="margin-bottom: 8px; font-size: 1rem; color: var(--text-muted);">Followers</h3>
+                <p style="font-size: 2.5rem; font-weight: bold; color: var(--accent); margin: 0;">${user.followers || 0}</p>
+            </div>
+            <div style="background: var(--accent-light); padding: 24px; border-radius: 12px; border-left: 4px solid var(--accent); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                <h3 style="margin-bottom: 8px; font-size: 1rem; color: var(--text-muted);">Following</h3>
+                <p style="font-size: 2.5rem; font-weight: bold; color: var(--accent); margin: 0;">${user.following || 0}</p>
+            </div>
+        </div>
+        ${fallbackNote}
+        <h3 style="margin-top: 32px;">Contribution Graph</h3>
+        <img src="https://ghchart.rshah.org/${CONFIG.github.username}" 
+             alt="GitHub contribution graph" 
+             style="width: 100%; border-radius: 8px; margin-top: 16px; background: white; padding: 10px;"
+             loading="lazy">
+        <p style="text-align: center; margin-top: 24px;">
+            <a href="https://github.com/${CONFIG.github.username}" 
+               target="_blank" 
+               rel="noopener noreferrer"
+               style="color: var(--accent); font-weight: 500; font-size: 1.05rem;">
+                View Full Profile →
+            </a>
+        </p>
+    `;
 }
 
 /* ==================== CONTACT FORM ==================== */
