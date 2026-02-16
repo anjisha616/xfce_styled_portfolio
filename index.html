@@ -3,96 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Anjisha Pun - UI/UX Designer & Frontend Developer Portfolio">
+    <meta name="keywords" content="UI/UX Designer, Frontend Developer, Web Developer, Portfolio">
+    <meta name="author" content="Anjisha Pun">
+    <meta name="theme-color" content="#87CEEB">
+    
     <title>Anjisha Pun - Portfolio</title>
+    
+    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%2387CEEB'/></svg>">
+    
+    <!-- Preconnect to external resources -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://api.github.com">
+    
+    <!-- Fonts - Using distinctive choices -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" as="style" href="style.css">
+    <link rel="preload" as="script" href="script.js">
 </head>
 <body>
     <!-- Boot Screen -->
-    <div id="bootScreen" class="boot-screen">
+    <div id="bootScreen" class="boot-screen" role="dialog" aria-label="System booting">
         <div class="boot-logo">
-            <div class="linux-logo"></div>
+            <div class="linux-logo" aria-hidden="true"></div>
         </div>
         <div class="boot-text">Linux Mint</div>
         <div class="boot-subtitle">Anjisha's Portfolio</div>
-        <div class="boot-loader">
+        <div class="boot-loader" role="progressbar" aria-label="Loading">
             <div class="boot-bar"></div>
         </div>
     </div>
 
     <!-- Desktop Widgets -->
-    <div class="desktop-widgets">
-        <div class="widget cpu-widget">
-            <div class="widget-title">CPU <span id="cpuPercent">3%</span></div>
-            <canvas id="cpuGraph" width="160" height="50"></canvas>
+    <aside class="desktop-widgets" aria-label="System monitors">
+        <div class="widget cpu-widget" role="region" aria-label="CPU Usage">
+            <div class="widget-title">
+                <span>CPU</span>
+                <span id="cpuPercent" aria-live="polite">3%</span>
+            </div>
+            <canvas id="cpuGraph" width="160" height="50" aria-label="CPU usage graph"></canvas>
         </div>
-        <div class="widget ram-widget">
-            <div class="widget-title">RAM <span id="ramPercent">80%</span></div>
-            <div class="widget-bar">
+        <div class="widget ram-widget" role="region" aria-label="RAM Usage">
+            <div class="widget-title">
+                <span>RAM</span>
+                <span id="ramPercent" aria-live="polite">80%</span>
+            </div>
+            <div class="widget-bar" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
                 <div class="ram-usage" id="ramBar" style="width: 80%"></div>
             </div>
-            <div class="widget-info"><span id="ramUsed">5.9</span> / 7.4 GiB</div>
+            <div class="widget-info">
+                <span id="ramUsed">5.9</span> / 7.4 GiB
+            </div>
         </div>
-    </div>
+    </aside>
 
     <!-- Main Menu -->
-    <div class="main-menu" id="mainMenu">
+    <nav class="main-menu" id="mainMenu" role="navigation" aria-label="Application menu">
         <div class="menu-search">
-            <input type="text" placeholder="Type to search..." id="menuSearch">
+            <label for="menuSearch" class="sr-only">Search applications</label>
+            <input 
+                type="text" 
+                id="menuSearch" 
+                placeholder="Type to search..." 
+                autocomplete="off"
+                aria-label="Search applications"
+            >
         </div>
         <div class="menu-content">
             <div class="menu-section">
-                <div class="menu-category">Portfolio</div>
-                <button class="menu-app" data-app="about">
-                    <span class="app-icon">👤</span>
+                <div class="menu-category" role="heading" aria-level="2">Portfolio</div>
+                <button class="menu-app" data-app="about" aria-label="Open About Me">
+                    <span class="app-icon" aria-hidden="true">👤</span>
                     <span class="app-name">About Me</span>
                 </button>
-                <button class="menu-app" data-app="skills">
-                    <span class="app-icon">⚙️</span>
+                <button class="menu-app" data-app="skills" aria-label="Open Skills">
+                    <span class="app-icon" aria-hidden="true">⚙️</span>
                     <span class="app-name">Skills</span>
                 </button>
-                <button class="menu-app" data-app="projects">
-                    <span class="app-icon">📁</span>
+                <button class="menu-app" data-app="projects" aria-label="Open Projects">
+                    <span class="app-icon" aria-hidden="true">📁</span>
                     <span class="app-name">Projects</span>
                 </button>
-                <button class="menu-app" data-app="github">
-                    <span class="app-icon">📊</span>
+                <button class="menu-app" data-app="github" aria-label="Open GitHub Stats">
+                    <span class="app-icon" aria-hidden="true">📊</span>
                     <span class="app-name">GitHub Stats</span>
                 </button>
-                <button class="menu-app" data-app="contact">
-                    <span class="app-icon">✉️</span>
+                <button class="menu-app" data-app="contact" aria-label="Open Contact">
+                    <span class="app-icon" aria-hidden="true">✉️</span>
                     <span class="app-name">Contact</span>
                 </button>
             </div>
             <div class="menu-section">
-                <div class="menu-category">System</div>
-                <button class="menu-app" id="downloadResume">
-                    <span class="app-icon">📥</span>
+                <div class="menu-category" role="heading" aria-level="2">System</div>
+                <button class="menu-app" id="downloadResume" aria-label="Download Resume">
+                    <span class="app-icon" aria-hidden="true">📥</span>
                     <span class="app-name">Resume</span>
                 </button>
             </div>
         </div>
         <div class="menu-footer">
-            <button class="menu-footer-btn" id="lockScreen">🔒 Lock</button>
-            <button class="menu-footer-btn" id="powerMenu">⏻ Power</button>
+            <button class="menu-footer-btn" id="lockScreen" aria-label="Lock screen">
+                <span aria-hidden="true">🔒</span> Lock
+            </button>
+            <button class="menu-footer-btn" id="powerMenu" aria-label="Power menu">
+                <span aria-hidden="true">⏻</span> Power
+            </button>
         </div>
-    </div>
+    </nav>
 
     <!-- Desktop -->
-    <div class="desktop" id="desktop">
-        <!-- Background will be CSS -->
-    </div>
+    <main class="desktop" id="desktop" role="main">
+        <!-- Background handled by CSS -->
+    </main>
 
     <!-- Windows Container -->
-    <div class="windows-container" id="windowsContainer"></div>
+    <div class="windows-container" id="windowsContainer" role="region" aria-label="Open windows"></div>
 
     <!-- Bottom Panel -->
-    <div class="bottom-panel">
-        <button class="menu-btn" id="menuBtn">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+    <footer class="bottom-panel" role="contentinfo">
+        <button 
+            class="menu-btn" 
+            id="menuBtn" 
+            aria-label="Open application menu"
+            aria-expanded="false"
+            aria-controls="mainMenu"
+        >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <rect x="3" y="3" width="7" height="7" rx="1"/>
                 <rect x="14" y="3" width="7" height="7" rx="1"/>
                 <rect x="3" y="14" width="7" height="7" rx="1"/>
@@ -100,52 +146,90 @@
             </svg>
         </button>
         
-        <div class="app-dock" id="appDock">
-            <button class="dock-app active" data-app="files" title="Files">
-                📁
+        <div class="app-dock" id="appDock" role="toolbar" aria-label="Quick launch applications">
+            <button class="dock-app active" data-app="files" title="Files" aria-label="Files">
+                <span aria-hidden="true">📁</span>
             </button>
-            <button class="dock-app" data-app="terminal" title="Terminal">
-                >_
+            <button class="dock-app" data-app="terminal" title="Terminal" aria-label="Terminal">
+                <span aria-hidden="true">>_</span>
             </button>
-            <button class="dock-app" data-app="browser" title="Firefox">
-                🦊
+            <button class="dock-app" data-app="browser" title="Firefox" aria-label="Firefox Browser">
+                <span aria-hidden="true">🦊</span>
             </button>
-            <button class="dock-app" data-app="vscode" title="VS Code">
-                </>
+            <button class="dock-app" data-app="vscode" title="VS Code" aria-label="Visual Studio Code">
+                <span aria-hidden="true">&lt;/&gt;</span>
             </button>
         </div>
         
-        <div class="window-buttons" id="windowButtons"></div>
+        <div class="window-buttons" id="windowButtons" role="toolbar" aria-label="Open windows"></div>
         
-        <div class="system-tray">
-            <span class="tray-icon" title="Network">📶</span>
-            <span class="tray-icon" title="Volume">🔊</span>
-            <span class="tray-icon" title="Notifications">🔔</span>
-            <div class="clock" id="clock">
-                <div class="clock-time">13:04</div>
+        <div class="system-tray" role="toolbar" aria-label="System tray">
+            <button class="tray-icon" title="Network" aria-label="Network status">
+                <span aria-hidden="true">📶</span>
+            </button>
+            <button class="tray-icon" title="Volume" aria-label="Volume control">
+                <span aria-hidden="true">🔊</span>
+            </button>
+            <button class="tray-icon" title="Notifications" aria-label="Notifications">
+                <span aria-hidden="true">🔔</span>
+            </button>
+            <button class="clock" id="clock" aria-label="Date and time">
+                <div class="clock-time" aria-live="polite">13:04</div>
                 <div class="clock-date">Dec 15</div>
-            </div>
+            </button>
         </div>
-    </div>
+    </footer>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
 
     <!-- Window Template -->
     <template id="windowTemplate">
-        <div class="window" data-app="">
-            <div class="window-titlebar">
+        <div class="window" data-app="" role="dialog" aria-modal="false" tabindex="-1">
+            <div class="window-titlebar" role="banner">
                 <div class="window-title">
-                    <span class="window-icon"></span>
+                    <span class="window-icon" aria-hidden="true"></span>
                     <span class="window-name"></span>
                 </div>
-                <div class="window-controls">
-                    <button class="win-btn minimize">−</button>
-                    <button class="win-btn maximize">□</button>
-                    <button class="win-btn close">×</button>
+                <div class="window-controls" role="toolbar" aria-label="Window controls">
+                    <button class="win-btn minimize" aria-label="Minimize window" title="Minimize">
+                        <span aria-hidden="true">−</span>
+                    </button>
+                    <button class="win-btn maximize" aria-label="Maximize window" title="Maximize">
+                        <span aria-hidden="true">□</span>
+                    </button>
+                    <button class="win-btn close" aria-label="Close window" title="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
                 </div>
             </div>
-            <div class="window-body"></div>
+            <div class="window-body" role="document"></div>
+            <!-- Resize handles -->
+            <div class="resize-handle resize-n" data-direction="n" aria-hidden="true"></div>
+            <div class="resize-handle resize-s" data-direction="s" aria-hidden="true"></div>
+            <div class="resize-handle resize-e" data-direction="e" aria-hidden="true"></div>
+            <div class="resize-handle resize-w" data-direction="w" aria-hidden="true"></div>
+            <div class="resize-handle resize-ne" data-direction="ne" aria-hidden="true"></div>
+            <div class="resize-handle resize-nw" data-direction="nw" aria-hidden="true"></div>
+            <div class="resize-handle resize-se" data-direction="se" aria-hidden="true"></div>
+            <div class="resize-handle resize-sw" data-direction="sw" aria-hidden="true"></div>
         </div>
     </template>
 
-    <script src="script.js"></script>
+    <!-- Loading Skeleton Template -->
+    <template id="skeletonTemplate">
+        <div class="skeleton-loader">
+            <div class="skeleton-line skeleton-title"></div>
+            <div class="skeleton-line skeleton-text"></div>
+            <div class="skeleton-line skeleton-text"></div>
+            <div class="skeleton-line skeleton-text short"></div>
+        </div>
+    </template>
+
+    <!-- Screen Reader Only Text -->
+    <div class="sr-only" role="status" aria-live="polite" id="srAnnouncements"></div>
+
+    <!-- Scripts -->
+    <script src="script.js" defer></script>
 </body>
 </html>
