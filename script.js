@@ -333,7 +333,7 @@ function getWindowContent(app) {
                         <div class="skill-tags">
                             <span class="skill-tag">Communication</span>
                             <span class="skill-tag">Presentation</span>
-                            <span class="skill-tag">Git</span>
+                            <span class="skill-tag">Musician</span>
                         </div>
                     </div>
                 </div>
