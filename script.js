@@ -829,9 +829,44 @@ function initWindowControls(win, winState) {
         Utils.announceToScreenReader(`${winState.title} minimized`);
     });
     
-    maximizeBtn.addEventListener('click', () => {
+    maximizeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         winState.maximized = !winState.maximized;
-        win.classList.toggle('maximized');
+        
+        if (winState.maximized) {
+            // Store original dimensions
+            winState.originalDimensions = {
+                top: win.style.top,
+                left: win.style.left,
+                width: win.style.width,
+                height: win.style.height
+            };
+            
+            // Force maximize
+            win.classList.add('maximized');
+            win.style.display = '';
+            win.style.opacity = '1';
+            win.style.visibility = 'visible';
+            win.style.top = '0px';
+            win.style.left = '0px';
+            win.style.width = '100vw';
+            win.style.height = 'calc(100vh - 48px)';
+            winState.minimized = false;
+            
+            console.log('Maximized - forcing dimensions');
+        } else {
+            // Restore original dimensions
+            win.classList.remove('maximized');
+            if (winState.originalDimensions) {
+                win.style.top = winState.originalDimensions.top;
+                win.style.left = winState.originalDimensions.left;
+                win.style.width = winState.originalDimensions.width;
+                win.style.height = winState.originalDimensions.height;
+            }
+            
+            console.log('Restored - returning to original size');
+        }
+        
         updateWidgetsVisibility();
         Utils.announceToScreenReader(
             `${winState.title} ${winState.maximized ? 'maximized' : 'restored'}`
