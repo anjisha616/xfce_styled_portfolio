@@ -8,6 +8,7 @@
 const CONFIG = {
     github: {
         username: 'anjisha616',
+        token: '',
         excludedRepos: ['cafe-clone', 'netflix-clone', 'starbucks-clone'],
         apiBaseUrl: 'https://api.github.com',
         cacheTimeout: 5 * 60 * 1000 // 5 minutes
@@ -245,10 +246,25 @@ const GitHubService = {
     async fetchWithRetry(url, retries = 3) {
         for (let i = 0; i < retries; i++) {
             try {
-                const response = await fetch(url);
+                const headers = {
+                    'Accept': 'application/vnd.github+json'
+                };
+
+                if (CONFIG.github.token) {
+                    headers.Authorization = `token ${CONFIG.github.token}`;
+                }
+
+                const response = await fetch(url, { headers });
                 
                 if (response.status === 403) {
-                    throw new Error('GitHub API rate limit exceeded. Please try again later.');
+                    const message = CONFIG.github.token
+                        ? 'GitHub API rate limit exceeded. Please try again later.'
+                        : 'GitHub API rate limit exceeded. Add a token in CONFIG.github.token.';
+                    throw new Error(message);
+                }
+
+                if (response.status === 401) {
+                    throw new Error('GitHub token is invalid. Update CONFIG.github.token.');
                 }
                 
                 if (!response.ok) {
