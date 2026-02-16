@@ -904,13 +904,23 @@ button:focus-visible {
 
 /* Contact Section */
 .contact-section {
-    max-width: 600px;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
     animation: fadeInUp 0.6s ease;
+}
+
+.contact-section h2 {
+    font-size: 2.2rem;
+}
+
+.contact-section h3 {
+    font-size: 1.4rem;
 }
 
 .contact-links p {
     margin-bottom: 14px !important;
-    font-size: 1rem !important;
+    font-size: 1.15rem !important;
 }
 
 .contact-form {
@@ -918,6 +928,7 @@ button:focus-visible {
     gap: 16px;
     max-width: 100%;
     margin-top: 20px;
+    justify-items: center;
 }
 
 .contact-form input,
@@ -928,9 +939,11 @@ button:focus-visible {
     background: rgba(255, 255, 255, 0.05);
     color: var(--text-dark);
     font-family: var(--font-body);
-    font-size: 0.95rem;
+    font-size: 1.05rem;
+    text-align: left;
     outline: none;
     transition: all var(--transition-base);
+    width: min(520px, 100%);
 }
 
 .contact-form input:focus,
@@ -958,10 +971,11 @@ button:focus-visible {
     border-radius: var(--radius-md);
     cursor: pointer;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     font-family: var(--font-body);
     transition: all var(--transition-base);
     box-shadow: var(--shadow-sm);
+    width: min(520px, 100%);
 }
 
 .contact-form button:hover {
