@@ -1287,7 +1287,7 @@ button:focus-visible {
     animation: toastSlideIn 0.3s ease forwards;
 }
 
-.toast.success {
+/* .toast.success {
     border-left: 4px solid var(--success);
 }
 
@@ -1301,7 +1301,7 @@ button:focus-visible {
 
 .toast.warning {
     border-left: 4px solid var(--warning);
-}
+} */
 
 @keyframes toastSlideIn {
     from {
