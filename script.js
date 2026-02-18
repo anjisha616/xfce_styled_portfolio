@@ -855,7 +855,7 @@ function getWindowContent(app) {
                         </div>
                     </div>
                     <div class="skill-category">
-                        <h4>Frontend</h4>
+                        <h4>Learning</h4>
                         <div class="skill-tags">
                             <span class="skill-tag">HTML/CSS</span>
                             <span class="skill-tag">JavaScript</span>                                               
