@@ -852,7 +852,7 @@ function getWindowContent(app) {
                         <div class="skill-tags">
                             <span class="skill-tag">HTML/CSS</span>
                             <span class="skill-tag">JavaScript</span>
-                            <span class="skill-tag">React</span>
+                            
                             
                         </div>
                     </div>
